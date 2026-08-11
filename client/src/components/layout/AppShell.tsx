@@ -90,7 +90,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <div className="flex min-h-0 flex-1 flex-col">
           {/* Top bar with trip switcher */}
-          <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
+          <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]">
             <div className="text-base font-semibold text-gray-800 md:hidden">✈️ 旅遊記帳</div>
             <select
               className="ml-auto rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm"
@@ -113,7 +113,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
 
         {/* Mobile bottom nav */}
-        <nav className="fixed inset-x-0 bottom-0 z-10 flex border-t border-gray-200 bg-white md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-10 flex border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)] md:hidden">
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.to}
