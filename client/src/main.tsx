@@ -4,7 +4,10 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./auth/AuthContext";
 import App from "./App";
+import { configureStatusBar } from "./native/statusBar";
 import "./index.css";
+
+configureStatusBar();
 
 const queryClient = new QueryClient({
   defaultOptions: {
