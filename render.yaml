@@ -1,0 +1,24 @@
+databases:
+  - name: travel-expense-db
+    plan: free
+    databaseName: travel_expense
+    user: travel_expense
+
+services:
+  - type: web
+    name: travel-expense-tracker
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start -w server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 30d
+      - key: DATABASE_URL
+        fromDatabase:
+          name: travel-expense-db
+          property: connectionString

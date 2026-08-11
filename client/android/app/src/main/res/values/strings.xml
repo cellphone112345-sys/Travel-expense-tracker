@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">旅遊記帳</string>
+    <string name="title_activity_main">旅遊記帳</string>
+    <string name="package_name">com.travelexpense.app</string>
+    <string name="custom_url_scheme">com.travelexpense.app</string>
+</resources>

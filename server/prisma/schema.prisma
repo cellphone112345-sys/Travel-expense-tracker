@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  homeCurrency String   @default("USD")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  trips      Trip[]
+  categories Category[]
+
+  @@map("users")
+}
+
+model Trip {
+  id           String    @id @default(cuid())
+  userId       String
+  name         String
+  startDate    DateTime
+  endDate      DateTime
+  baseCurrency String
+  homeCurrency String
+  totalBudget  Int?
+  dailyBudget  Int?
+  notes        String?
+  isArchived   Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses Expense[]
+
+  @@index([userId])
+  @@map("trips")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  userId    String?
+  name      String
+  icon      String?
+  color     String   @default("#6366f1")
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses Expense[]
+
+  @@index([userId])
+  @@map("categories")
+}
+
+// SQLite has no native enum support; paymentMethod is a plain string
+// constrained to "CASH" | "CARD" | "OTHER" by zod at the API layer.
+model Expense {
+  id                         String        @id @default(cuid())
+  tripId                     String
+  categoryId                 String
+  amountMinor                Int
+  currency                   String
+  amountInHomeCurrencyMinor  Int
+  amountInBaseCurrencyMinor  Int
+  exchangeRateUsed           Float
+  description                String
+  date                       DateTime
+  merchant                   String?
+  paymentMethod              String        @default("OTHER")
+  notes                      String?
+  createdAt                  DateTime      @default(now())
+  updatedAt                  DateTime      @updatedAt
+
+  trip     Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@index([tripId])
+  @@index([categoryId])
+  @@map("expenses")
+}
+
+model ExchangeRateCache {
+  id        String   @id @default(cuid())
+  date      String
+  base      String
+  ratesJson String
+  fetchedAt DateTime @default(now())
+
+  @@unique([date, base])
+  @@map("exchange_rate_cache")
+}
