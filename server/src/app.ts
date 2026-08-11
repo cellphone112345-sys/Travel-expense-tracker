@@ -29,6 +29,10 @@ export function createApp() {
   app.use("/api/exchange-rates", exchangeRatesRouter);
   app.use("/api/expenses", requireAuth, expenseByIdRouter);
 
+  // Lets the Android APK be downloaded straight from a phone browser instead of
+  // relying on a file-transfer channel that may not deliver a real .apk to the device.
+  app.use("/download", express.static(path.join(__dirname, "..", "public", "downloads")));
+
   if (env.isProduction) {
     const clientDist = path.join(__dirname, "..", "..", "client", "dist");
     app.use(express.static(clientDist));
