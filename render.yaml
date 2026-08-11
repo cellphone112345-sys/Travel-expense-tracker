@@ -11,7 +11,9 @@ services:
     plan: free
     # --include=dev: NODE_ENV=production (set below) makes plain `npm install` skip
     # devDependencies, but the client build needs vite/typescript/@types/node to run tsc/vite.
-    buildCommand: npm install --include=dev && npm run build
+    # prisma:generate is run explicitly because Render's npm install doesn't run the
+    # @prisma/client postinstall script that would normally generate it automatically.
+    buildCommand: npm install --include=dev && npm run prisma:generate -w server && npm run build
     startCommand: npm run start -w server
     envVars:
       - key: NODE_ENV
